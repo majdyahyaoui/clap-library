@@ -1,0 +1,18 @@
+# Fichiers et dossiers générés par Maven
+target/
+*.class
+
+# Logs
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
