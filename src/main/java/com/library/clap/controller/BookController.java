@@ -2,6 +2,9 @@ package com.library.clap.controller;
 
 import com.library.clap.dto.BookDTO;
 import com.library.clap.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,46 +17,58 @@ import java.util.List;
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@Tag(name = "Books", description = "API for managing books")
 public class BookController {
     
     private final BookService bookService;
     
     @GetMapping
+    @Operation(summary = "Get all books", description = "Retrieve a list of all books in the library")
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
+    @Operation(summary = "Get book by ID", description = "Retrieve a specific book by its ID")
+    public ResponseEntity<BookDTO> getBookById(
+            @Parameter(description = "Book ID") @PathVariable Long id) {
         return ResponseEntity.ok(bookService.getBookById(id));
     }
     
     @PostMapping
+    @Operation(summary = "Create a new book", description = "Add a new book to the library")
     public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(bookService.createBook(bookDTO));
     }
     
     @PutMapping("/{id}")
+    @Operation(summary = "Update a book", description = "Update an existing book's information")
     public ResponseEntity<BookDTO> updateBook(
-            @PathVariable Long id,
+            @Parameter(description = "Book ID") @PathVariable Long id,
             @Valid @RequestBody BookDTO bookDTO) {
         return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+    @Operation(summary = "Delete a book", description = "Remove a book from the library")
+    public ResponseEntity<Void> deleteBook(
+            @Parameter(description = "Book ID") @PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
     
     @GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam String title) {
+    @Operation(summary = "Search books", description = "Search books by title")
+    public ResponseEntity<List<BookDTO>> searchBooks(
+            @Parameter(description = "Book title") @RequestParam String title) {
         return ResponseEntity.ok(bookService.searchBooksByTitle(title));
     }
     
     @GetMapping("/author/{authorId}")
-    public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable Long authorId) {
+    @Operation(summary = "Get books by author", description = "Retrieve all books written by a specific author")
+    public ResponseEntity<List<BookDTO>> getBooksByAuthor(
+            @Parameter(description = "Author ID") @PathVariable Long authorId) {
         return ResponseEntity.ok(bookService.getBooksByAuthor(authorId));
     }
 }
